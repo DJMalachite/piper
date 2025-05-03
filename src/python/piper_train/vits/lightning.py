@@ -330,6 +330,9 @@ class VitsModel(pl.LightningModule):
         ]
 
         return optimizers, schedulers
+    def lr_scheduler_step(self, scheduler, metric, optimizer_idx):
+        scheduler.step()
+
 
     @staticmethod
     def add_model_specific_args(parent_parser):

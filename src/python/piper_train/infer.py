@@ -4,9 +4,14 @@ import json
 import logging
 import sys
 import time
+import pathlib
 from pathlib import Path
 
 import torch
+
+torch.serialization.add_safe_globals([pathlib.PosixPath])
+
+from piper_train.vits.lightning import VitsModel
 
 from .vits.lightning import VitsModel
 from .vits.utils import audio_float_to_int16

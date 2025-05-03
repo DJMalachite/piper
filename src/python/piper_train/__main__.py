@@ -7,6 +7,7 @@ import torch
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 
+
 from .vits.lightning import VitsModel
 
 _LOGGER = logging.getLogger(__package__)
@@ -57,12 +58,20 @@ def main():
         num_speakers = int(config["num_speakers"])
         sample_rate = int(config["audio"]["sample_rate"])
 
-    trainer = Trainer.from_argparse_args(args)
+    callbacks = []
     if args.checkpoint_epochs is not None:
-        trainer.callbacks = [ModelCheckpoint(every_n_epochs=args.checkpoint_epochs)]
-        _LOGGER.debug(
-            "Checkpoints will be saved every %s epoch(s)", args.checkpoint_epochs
+        checkpoint_callback = ModelCheckpoint(
+            dirpath=str(args.default_root_dir / "checkpoints"),
+            filename="epoch={epoch}-step={step}",
+            every_n_epochs=args.checkpoint_epochs,
+            save_top_k=-1,  # Save all checkpoints (optional, tweak if needed)
+            monitor=None    # Not monitoring a metric, just saving by interval
         )
+        callbacks.append(checkpoint_callback)
+        _LOGGER.debug("Checkpoints will be saved every %s epoch(s)", args.checkpoint_epochs)
+
+    trainer = Trainer.from_argparse_args(args, callbacks=callbacks)
+
 
     dict_args = vars(args)
     if args.quality == "x-low":
