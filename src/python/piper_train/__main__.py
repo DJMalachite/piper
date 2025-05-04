@@ -64,15 +64,21 @@ def main():
     if args.checkpoint_epochs is not None:
         checkpoint_callback = ModelCheckpoint(
             dirpath=str(args.default_root_dir / "checkpoints"),
-            filename="{epoch}-{step}", #  use epoch and step for the filename
+            filename="best-val_loss-{val_loss:.2f}-{epoch}-{step}", #  use epoch and step for the filename
             every_n_epochs=args.checkpoint_epochs,
-            save_top_k=1,  # Save 1 checkpoint instead of all checkpoints( can be increased if needed)
-            monitor=None    # Not monitoring a metric, just saving by interval
+            save_top_k=1,
+            save_last=True,  # Save 1 checkpoint instead of all checkpoints( can be increased if needed)
+            monitor="val_loss",
+            mode="min",
+            verbose=True   # Not monitoring a metric, just saving by interval
         )
         callbacks.append(checkpoint_callback)
         _LOGGER.debug("Checkpoints will be saved every %s epoch(s)", args.checkpoint_epochs)
 
-    trainer = Trainer.from_argparse_args(args, callbacks=callbacks)
+    trainer = Trainer.from_argparse_args(
+    args,
+    callbacks=[checkpoint_callback],
+)
 
 
     dict_args = vars(args)

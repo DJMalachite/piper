@@ -14,6 +14,9 @@ from .losses import discriminator_loss, feature_loss, generator_loss, kl_loss
 from .mel_processing import mel_spectrogram_torch, spec_to_mel_torch
 from .models import MultiPeriodDiscriminator, SynthesizerTrn
 
+from pytorch_lightning.callbacks import ModelCheckpoint
+
+
 _LOGGER = logging.getLogger("vits.lightning")
 
 
@@ -281,7 +284,7 @@ class VitsModel(pl.LightningModule):
 
     def validation_step(self, batch: Batch, batch_idx: int):
         val_loss = self.training_step_g(batch) + self.training_step_d(batch)
-        self.log("val_loss", val_loss)
+        self.log("val_loss", val_loss, prog_bar=True, on_step=False, on_epoch=True)
 
         # Generate audio examples
         for utt_idx, test_utt in enumerate(self._test_dataset):
@@ -304,6 +307,11 @@ class VitsModel(pl.LightningModule):
             )
 
         return val_loss
+    def on_validation_end(self):
+        for cb in self.trainer.callbacks:
+            if isinstance(cb, ModelCheckpoint):
+                 print(f"[DEBUG] Best val_loss so far: {cb.best_model_score}")
+
 
     def configure_optimizers(self):
         optimizers = [
