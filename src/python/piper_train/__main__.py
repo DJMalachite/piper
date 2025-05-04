@@ -2,10 +2,12 @@ import argparse
 import json
 import logging
 from pathlib import Path
-
+import pathlib
 import torch
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
+
+torch.serialization.add_safe_globals([pathlib.PosixPath])
 
 
 from .vits.lightning import VitsModel
