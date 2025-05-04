@@ -62,9 +62,9 @@ def main():
     if args.checkpoint_epochs is not None:
         checkpoint_callback = ModelCheckpoint(
             dirpath=str(args.default_root_dir / "checkpoints"),
-            filename="epoch={epoch}-step={step}",
+            filename="{epoch}-{step}", #  use epoch and step for the filename
             every_n_epochs=args.checkpoint_epochs,
-            save_top_k=-1,  # Save all checkpoints (optional, tweak if needed)
+            save_top_k=1,  # Save 1 checkpoint instead of all checkpoints( can be increased if needed)
             monitor=None    # Not monitoring a metric, just saving by interval
         )
         callbacks.append(checkpoint_callback)
