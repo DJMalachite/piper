@@ -7,6 +7,8 @@ import torch
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 
+from pytorch_lightning.loggers import TensorBoardLogger # fix loggining on newer pytorch
+
 torch.serialization.add_safe_globals([pathlib.PosixPath])
 
 
@@ -74,10 +76,13 @@ def main():
         )
         callbacks.append(checkpoint_callback)
         _LOGGER.debug("Checkpoints will be saved every %s epoch(s)", args.checkpoint_epochs)
+    
+    logger = TensorBoardLogger("lightning_logs", name="piper")
 
     trainer = Trainer.from_argparse_args(
     args,
     callbacks=[checkpoint_callback],
+    logger=logger,
 )
 
 
