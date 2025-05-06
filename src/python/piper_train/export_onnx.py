@@ -4,8 +4,9 @@ import logging
 from pathlib import Path
 from typing import Optional
 
+import pathlib
 import torch
-
+torch.serialization.add_safe_globals([pathlib.PosixPath])
 from .vits.lightning import VitsModel
 
 _LOGGER = logging.getLogger("piper_train.export_onnx")
