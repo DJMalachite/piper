@@ -1,9 +1,10 @@
 cython>=0.29.0,<1
 piper-phonemize~=1.1.0
 librosa>=0.9.2,<1
-numpy>=1.26.4
+numpy<=2.0
 onnxruntime>=1.11.0
 pytorch-lightning~=1.9.0
 torch>=2.7.0
 onnx>=1.17
 pip>=24.0.0
+tensorboard>=2.19.0
