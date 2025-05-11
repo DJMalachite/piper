@@ -1,5 +1,10 @@
 ![Piper logo](etc/logo.png)
 
+# Now with Support for ROCm on linux via pytorch 2.7!
+If you are looking to train on an AMD Card ensure you are using Pytorch for ROCm.
+Package wise its almost the same but you need to have pip version ```24.0.0``` and NUMPY ```1.26.0```
+Otherwise its exactly the same as the docs
+
 A fast, local neural text to speech system that sounds great and is optimized for the Raspberry Pi 4.
 Piper is used in a [variety of projects](#people-using-piper).
 
